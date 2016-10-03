@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 
 public class JCTypeParameterDotDrawer extends DotDrawer<JCTypeParameter> {
 
-	public JCTypeParameterDotDrawer(final JCTypeParameter node, final OutputStream output) {
-		super(node, output);
+	public JCTypeParameterDotDrawer(final JCTypeParameter node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

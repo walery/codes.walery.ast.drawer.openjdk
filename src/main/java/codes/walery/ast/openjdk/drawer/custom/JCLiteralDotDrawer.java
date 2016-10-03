@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 public class JCLiteralDotDrawer extends DotDrawer<JCLiteral> {
 
-	public JCLiteralDotDrawer(final JCLiteral node, final OutputStream output) {
-		super(node, output);
+	public JCLiteralDotDrawer(final JCLiteral node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

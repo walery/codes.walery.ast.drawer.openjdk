@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 
 public class JCMemberReferenceDotDrawer extends DotDrawer<JCMemberReference> {
 
-	public JCMemberReferenceDotDrawer(final JCMemberReference node, final OutputStream output) {
-		super(node, output);
+	public JCMemberReferenceDotDrawer(final JCMemberReference node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

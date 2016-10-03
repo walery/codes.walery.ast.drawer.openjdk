@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 
 public class JCIdentDotDrawer extends DotDrawer<JCIdent> {
 
-	public JCIdentDotDrawer(final JCIdent node, final OutputStream output) {
-		super(node, output);
+	public JCIdentDotDrawer(final JCIdent node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

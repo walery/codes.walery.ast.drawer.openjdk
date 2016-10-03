@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCUnary;
 
 public class JCUnaryDotDrawer extends DotDrawer<JCUnary> {
 
-	public JCUnaryDotDrawer(final JCUnary node, final OutputStream output) {
-		super(node, output);
+	public JCUnaryDotDrawer(final JCUnary node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

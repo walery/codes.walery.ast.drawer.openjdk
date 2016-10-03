@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 public class JCFieldAccessDotDrawer extends DotDrawer<JCFieldAccess> {
 
-	public JCFieldAccessDotDrawer(final JCFieldAccess node, final OutputStream output) {
-		super(node, output);
+	public JCFieldAccessDotDrawer(final JCFieldAccess node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

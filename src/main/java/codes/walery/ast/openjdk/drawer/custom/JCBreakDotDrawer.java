@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCBreak;
 
 public class JCBreakDotDrawer extends DotDrawer<JCBreak> {
 
-	public JCBreakDotDrawer(final JCBreak node, final OutputStream output) {
-		super(node, output);
+	public JCBreakDotDrawer(final JCBreak node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

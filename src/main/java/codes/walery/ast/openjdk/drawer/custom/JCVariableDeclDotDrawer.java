@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 public class JCVariableDeclDotDrawer extends DotDrawer<JCVariableDecl> {
 
-	public JCVariableDeclDotDrawer(final JCVariableDecl node, final OutputStream output) {
-		super(node, output);
+	public JCVariableDeclDotDrawer(final JCVariableDecl node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

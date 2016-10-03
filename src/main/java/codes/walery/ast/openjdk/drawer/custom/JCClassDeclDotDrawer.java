@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 
 public class JCClassDeclDotDrawer extends DotDrawer<JCClassDecl> {
 
-	public JCClassDeclDotDrawer(final JCClassDecl node, final OutputStream output) {
-		super(node, output);
+	public JCClassDeclDotDrawer(final JCClassDecl node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

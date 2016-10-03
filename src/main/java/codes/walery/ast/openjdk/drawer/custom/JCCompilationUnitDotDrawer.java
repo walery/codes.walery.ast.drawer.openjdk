@@ -8,8 +8,8 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 public class JCCompilationUnitDotDrawer extends DotDrawer<JCCompilationUnit> {
 
-	public JCCompilationUnitDotDrawer(final JCCompilationUnit node, final OutputStream output) {
-		super(node, output);
+	public JCCompilationUnitDotDrawer(final JCCompilationUnit node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 }

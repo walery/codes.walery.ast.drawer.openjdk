@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 
 public class JCMethodInvocationDotDrawer extends DotDrawer<JCMethodInvocation> {
 
-	public JCMethodInvocationDotDrawer(final JCMethodInvocation node, final OutputStream output) {
-		super(node, output);
+	public JCMethodInvocationDotDrawer(final JCMethodInvocation node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

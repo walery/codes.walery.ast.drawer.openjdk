@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 
 public class JCPrimitiveTypeTreeDotDrawer extends DotDrawer<JCPrimitiveTypeTree> {
 
-	public JCPrimitiveTypeTreeDotDrawer(final JCPrimitiveTypeTree node, final OutputStream output) {
-		super(node, output);
+	public JCPrimitiveTypeTreeDotDrawer(final JCPrimitiveTypeTree node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

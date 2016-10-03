@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 
 public class JCAssignOpDotDrawer extends DotDrawer<JCAssignOp> {
 
-	public JCAssignOpDotDrawer(final JCAssignOp node, final OutputStream output) {
-		super(node, output);
+	public JCAssignOpDotDrawer(final JCAssignOp node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

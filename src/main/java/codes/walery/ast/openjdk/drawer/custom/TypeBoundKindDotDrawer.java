@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
 
 public class TypeBoundKindDotDrawer extends DotDrawer<TypeBoundKind> {
 
-	public TypeBoundKindDotDrawer(final TypeBoundKind node, final OutputStream output) {
-		super(node, output);
+	public TypeBoundKindDotDrawer(final TypeBoundKind node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

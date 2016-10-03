@@ -11,8 +11,8 @@ import com.sun.tools.javac.tree.JCTree.JCNewArray;
 
 public class JCNewArrayDotDrawer extends DotDrawer<JCNewArray> {
 
-	public JCNewArrayDotDrawer(final JCNewArray node, final OutputStream output) {
-		super(node, output);
+	public JCNewArrayDotDrawer(final JCNewArray node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

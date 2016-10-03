@@ -6,7 +6,7 @@ import com.sun.tools.javac.tree.JCTree;
 
 public class JCDefaultDotDrawer extends DotDrawer<JCTree> {
 
-	public JCDefaultDotDrawer(final JCTree node, final OutputStream output) {
-		super(node, output);
+	public JCDefaultDotDrawer(final JCTree node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 }

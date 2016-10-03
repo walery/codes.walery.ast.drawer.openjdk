@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 
 public class JCAnnotationDotDrawer extends DotDrawer<JCAnnotation> {
 
-	public JCAnnotationDotDrawer(final JCAnnotation node, final OutputStream output) {
-		super(node, output);
+	public JCAnnotationDotDrawer(final JCAnnotation node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCWildcard;
 
 public class JCWildcardDotDrawer extends DotDrawer<JCWildcard> {
 
-	public JCWildcardDotDrawer(final JCWildcard node, final OutputStream output) {
-		super(node, output);
+	public JCWildcardDotDrawer(final JCWildcard node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

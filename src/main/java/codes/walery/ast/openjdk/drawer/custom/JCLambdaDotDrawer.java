@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCLambda;
 
 public class JCLambdaDotDrawer extends DotDrawer<JCLambda> {
 
-	public JCLambdaDotDrawer(final JCLambda node, final OutputStream output) {
-		super(node, output);
+	public JCLambdaDotDrawer(final JCLambda node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 
 public class JCBinaryDotDrawer extends DotDrawer<JCBinary> {
 
-	public JCBinaryDotDrawer(final JCBinary node, final OutputStream output) {
-		super(node, output);
+	public JCBinaryDotDrawer(final JCBinary node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

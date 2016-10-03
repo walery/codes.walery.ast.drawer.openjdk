@@ -10,8 +10,8 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 
 public class JCBlockDotDrawer extends DotDrawer<JCBlock> {
 
-	public JCBlockDotDrawer(final JCBlock node, final OutputStream output) {
-		super(node, output);
+	public JCBlockDotDrawer(final JCBlock node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

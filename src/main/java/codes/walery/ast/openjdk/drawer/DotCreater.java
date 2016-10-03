@@ -32,7 +32,7 @@ public class DotCreater {
 		node.toString();
 
 		output.println("digraph G {");
-		new JCCompilationUnitDotDrawer(node, output).draw(node.endPositions);
+		new JCCompilationUnitDotDrawer(node, "root", output).draw(node.endPositions);
 		output.println("}");
 	}
 

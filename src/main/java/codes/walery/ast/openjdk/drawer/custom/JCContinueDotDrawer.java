@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCContinue;
 
 public class JCContinueDotDrawer extends DotDrawer<JCContinue> {
 
-	public JCContinueDotDrawer(final JCContinue node, final OutputStream output) {
-		super(node, output);
+	public JCContinueDotDrawer(final JCContinue node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

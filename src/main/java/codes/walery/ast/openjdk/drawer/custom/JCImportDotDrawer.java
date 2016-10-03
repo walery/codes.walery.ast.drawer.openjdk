@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCImport;
 
 public class JCImportDotDrawer extends DotDrawer<JCImport> {
 
-	public JCImportDotDrawer(final JCImport node, final OutputStream output) {
-		super(node, output);
+	public JCImportDotDrawer(final JCImport node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

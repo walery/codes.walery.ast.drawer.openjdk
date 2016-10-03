@@ -10,8 +10,8 @@ import com.sun.tools.javac.tree.JCTree.JCModifiers;
 
 public class JCModifiersDotDrawer extends DotDrawer<JCModifiers> {
 
-	public JCModifiersDotDrawer(final JCModifiers node, final OutputStream output) {
-		super(node, output);
+	public JCModifiersDotDrawer(final JCModifiers node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

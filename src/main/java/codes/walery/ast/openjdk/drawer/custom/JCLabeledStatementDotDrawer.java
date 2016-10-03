@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCLabeledStatement;
 
 public class JCLabeledStatementDotDrawer extends DotDrawer<JCLabeledStatement> {
 
-	public JCLabeledStatementDotDrawer(final JCLabeledStatement node, final OutputStream output) {
-		super(node, output);
+	public JCLabeledStatementDotDrawer(final JCLabeledStatement node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override

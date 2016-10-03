@@ -9,8 +9,8 @@ import com.sun.tools.javac.tree.JCTree.JCTry;
 
 public class JCTryDotDrawer extends DotDrawer<JCTry> {
 
-	public JCTryDotDrawer(final JCTry node, final OutputStream output) {
-		super(node, output);
+	public JCTryDotDrawer(final JCTry node, final String astPath, final OutputStream output) {
+		super(node, astPath, output);
 	}
 
 	@Override
