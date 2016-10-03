@@ -93,7 +93,7 @@ public class DotCreater {
 				"   overflow: scroll;\n" + //
 				"   width: 200px;\n" + //
 				"   resize: horizontal;\n" + //
-				"   margin-top: 20px;\n" + //
+				"   margin-top: 30px;\n" + //
 				"   border-right-style: solid;\n" + //
 				"   border-right-color: gray;\n" + //
 				"}\n" + //
@@ -207,9 +207,9 @@ public class DotCreater {
 				"	<body>\n" + //
 				"		<div id=\"all\">\n" + //
 				"			<div id=\"controlls\">" + //
-				"				<span>code </span><span id=\"srcPlus\">+</span>&nbsp;&nbsp;&nbsp;<span id=\"srcMinus\">-</span>" + //
+				"				<span>code </span><button id=\"srcPlus\">+</button><button id=\"srcMinus\">-</button>" + //
 				"				<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>" + //
-				"				<span>ast </span><span id=\"astPlus\">+</span>&nbsp;&nbsp;&nbsp;<span id=\"astMinus\">-</span>" + //
+				"				<span>ast </span><button id=\"astPlus\">+</button><button id=\"astMinus\">-</button>" + //
 				"			</div>" + //
 				"			<div id=\"code\"></div>\n" + //
 				"			<div id=\"ast\">\n";
