@@ -40,11 +40,7 @@ public class DotDrawerProcessor extends AbstractProcessor {
 		toDraw.stream().forEach(e -> {
 			CompilationUnitTree compilationUnit = trees.getPath(e).getCompilationUnit();
 
-			try (OutputStream output = getOutput(e)) {
-				DotCreater.printAstAsDot((JCCompilationUnit) compilationUnit, output);
-			} catch (Exception exec) {
-				// no idea
-			}
+			DotCreater.printAstAsDot((JCCompilationUnit) compilationUnit);
 		});
 
 		return true;

@@ -1,13 +1,14 @@
 package codes.walery.ast.openjdk.drawer;
 
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.joining;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import codes.walery.ast.openjdk.drawer.custom.JCAnnotationDotDrawer;
 import codes.walery.ast.openjdk.drawer.custom.JCAssignOpDotDrawer;
@@ -36,6 +37,7 @@ import codes.walery.ast.openjdk.drawer.custom.JCUnaryDotDrawer;
 import codes.walery.ast.openjdk.drawer.custom.JCVariableDeclDotDrawer;
 import codes.walery.ast.openjdk.drawer.custom.JCWildcardDotDrawer;
 import codes.walery.ast.openjdk.drawer.custom.TypeBoundKindDotDrawer;
+import codes.walery.ast.openjdk.drawer.model.Node;
 
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -69,83 +71,73 @@ import com.sun.tools.javac.tree.JCTree.TypeBoundKind;
 
 public abstract class DotDrawer<T extends JCTree> implements Drawer {
 	protected final T node;
-	private final PrintStream output;
-	private final String astPath;
 
-	public DotDrawer(final T node, final String astPath) {
-		this(node, astPath, System.out);
-	}
-
-	public DotDrawer(final T node, final String astPath, final OutputStream output) {
+	public DotDrawer(final T node) {
 		this.node = node;
-		this.astPath = astPath;
-
-		if (output instanceof PrintStream) {
-			this.output = (PrintStream) output;
-		} else {
-			this.output = new PrintStream(output);
-		}
 	}
 
 	@Override
-	public void draw() {
-		draw(null);
+	public Node draw() {
+		return draw(null);
 	}
 
 	@Override
-	public void draw(final EndPosTable ept) {
-		drawNode(ept);
-		drawChildren(ept);
+	public Node draw(final EndPosTable ept) {
+		Node node = drawNode(ept);
+		node.setChildren(drawChildren(ept));
+
+		return node;
 	}
 
-	protected void drawNode(final EndPosTable ept) {
-		final String templateWithoutStyle = "%s [shape = box, label = \"%s%s\"]%n";
-		final String templateWithStyle = "%s [shape = box, label = \"%s%s\", color = \"%s\"]%n";
+	protected Node drawNode(final EndPosTable ept) {
+		Node res = new Node();
+		res.setId(node.hashCode());
+		res.setTypeName(node.getClass().getSimpleName());
+		res.setProps(drawNodeProps());
 
-		String template = templateWithoutStyle;
-
-		String props = drawNodeProps(ept);
-		final String color = getColor();
-
-		if (props != null && !props.isEmpty()) {
-			props = "\\n" + props;
+		if (ept != null) {
+			res.setStart(node.getStartPosition());
+			res.setEnd(node.getEndPosition(ept));
 		}
 
-		if (color != null && !color.isEmpty()) {
-			template = templateWithStyle;
+		return res;
+	}
+
+	protected Map<String, ?> drawNodeProps() {
+		return emptyMap();
+	}
+
+	protected final Map<String, ?> props(final Prop... props) {
+		Map<String, Object> res = new HashMap<>();
+
+		Arrays.asList(props).stream() //
+		.forEach(prop -> res.put(prop.getName(), prop.getValue()));
+
+		return res;
+	}
+
+	protected final Prop prop(final String name, final Object value) {
+		return new Prop(name, value);
+	}
+
+	// TODO move somewhere
+	// TODO use lombok
+	public static class Prop {
+		private final String name;
+		private final Object value;
+
+		private Prop(final String name, final Object value) {
+			this.name = name;
+			this.value = value;
 		}
 
-		output.printf(template, arraySignCleaner(astPath), node.getClass().getSimpleName(), props, color);
-	}
-
-	protected String drawNodeProps(final EndPosTable ept) {
-		if (ept == null) {
-			return "";
+		public String getName() {
+			return name;
 		}
 
-		return props( //
-				prop("start", node.getStartPosition()), //
-				prop("end", node.getEndPosition(ept)) //
-		);
-
-		// return drawNodePropsFromFields();
-		// return drawNodePropsFromMethods();
-	}
-
-	protected final String props(final String... props) {
-		return Arrays.asList(props).stream().collect(joining("\\n"));
-	}
-
-	protected final String prop(final String name, final Object value) {
-		return name + ": " + escapeValue(value);
-	}
-
-	private String escapeValue(final Object value) {
-		if (value == null) {
-			return "null";
+		public Object getValue() {
+			return value;
 		}
-
-		return value.toString().replaceAll("\"", "\\\\\"");
 	}
 
 	protected String drawNodePropsFromFields() {
@@ -187,118 +179,125 @@ public abstract class DotDrawer<T extends JCTree> implements Drawer {
 				.collect(joining("\\n"));
 	}
 
-	protected String getColor() {
-		return "";
+	protected NodeState getState() {
+		return NodeState.DEFAULT;
 	}
 
-	protected void drawChildren(final EndPosTable ept) {
+	// TODO rename
+	// TODO move somewhere else
+	public static enum NodeState {
+		DEFAULT, NOT_IMPLEMENTED, NOT_FINISHED, NOT_IN_SRC
+	}
+
+	protected Map<String, Node> drawChildren(final EndPosTable ept) {
+		Map<String, Node> children = new HashMap<>();
+
 		for (Field f : node.getClass().getFields()) {
 			try {
+				String childName = f.getName();
+
 				if (DotDrawerHelper.isSuperclassOfJCTree(f)) {
-					drawChild((JCTree) f.get(node), f.getName(), ept);
+					Node child = drawChild((JCTree) f.get(node), childName, ept);
+					children.put(childName, child);
 				} else if (DotDrawerHelper.isListOfTypeOfSuperclassOfJCTree(f)) {
-					drawChildren((List<JCTree>) f.get(node), f.getName(), ept);
+					Map<String, Node> child = drawChildren((List<JCTree>) f.get(node), childName, ept);
+					children.putAll(child);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+
+		return children;
 	}
 
-	protected void drawChildren(final List<? extends JCTree> children, final String edgeName, final EndPosTable ept) {
+	protected Map<String, Node> drawChildren(final List<? extends JCTree> children, final String childName, final EndPosTable ept) {
 		if (children == null) {
-			return;
+			return emptyMap();
 		}
+
+		Map<String, Node> res = new HashMap<>();
 
 		for (int i = 0; i < children.size(); i++) {
-			drawChild(children.get(i), edgeName + "[" + i + "]", ept);
+			String childNameIndexed = childName + "[" + i + "]";
+
+			Node child = drawChild(children.get(i), childNameIndexed, ept);
+
+			res.put(childNameIndexed, child);
 		}
+
+		return res;
 	}
 
-	protected void drawChild(final JCTree child, final String edgeName, final EndPosTable ept) {
+	protected Node drawChild(final JCTree child, final String childName, final EndPosTable ept) {
 		if (child == null) {
-			return;
-		}
-		if (edgeName == null) {
-			throw new NullPointerException("edgeName must not be null");
+			return null;
 		}
 
-		getDrawer(child, edgeName).draw(ept);
-		drawEdge(child, edgeName);
-	}
-
-	protected void drawEdge(final JCTree child, final String edgeName) {
-		String ap = arraySignCleaner(astPath);
-		String apc = arraySignCleaner(ap + "__" + edgeName);
-		output.printf("%s -> %s [label = \"%s\"]%n", ap, apc, edgeName);
-	}
-
-	private String arraySignCleaner(final String input) {
-		return input.replaceAll("\\[", "_").replaceAll("\\]", "_");
+		return getDrawer(child, childName).draw(ept);
 	}
 
 	// TODO refactor
-	protected Drawer getDrawer(final JCTree node, final String edgeName) {
+	protected Drawer getDrawer(final JCTree node, final String childName) {
 		final String treeType = node.getClass().getSimpleName();
-		final String newAstPath = astPath + "__" + edgeName;
 
 		switch (treeType) {
 		case "JCCompilationUnit":
-			return new JCCompilationUnitDotDrawer((JCCompilationUnit) node, newAstPath, output);
+			return new JCCompilationUnitDotDrawer((JCCompilationUnit) node);
 		case "JCAnnotation":
-			return new JCAnnotationDotDrawer((JCAnnotation) node, newAstPath, output);
+			return new JCAnnotationDotDrawer((JCAnnotation) node);
 		case "JCImport":
-			return new JCImportDotDrawer((JCImport) node, newAstPath, output);
+			return new JCImportDotDrawer((JCImport) node);
 		case "JCModifiers":
-			return new JCModifiersDotDrawer((JCModifiers) node, newAstPath, output);
+			return new JCModifiersDotDrawer((JCModifiers) node);
 		case "JCBlock": // 5
-			return new JCBlockDotDrawer((JCBlock) node, newAstPath, output);
+			return new JCBlockDotDrawer((JCBlock) node);
 		case "JCPrimitiveTypeTree":
-			return new JCPrimitiveTypeTreeDotDrawer((JCPrimitiveTypeTree) node, newAstPath, output);
+			return new JCPrimitiveTypeTreeDotDrawer((JCPrimitiveTypeTree) node);
 		case "JCMethodInvocation":
-			return new JCMethodInvocationDotDrawer((JCMethodInvocation) node, newAstPath, output);
+			return new JCMethodInvocationDotDrawer((JCMethodInvocation) node);
 		case "JCLiteral":
-			return new JCLiteralDotDrawer((JCLiteral) node, newAstPath, output);
+			return new JCLiteralDotDrawer((JCLiteral) node);
 		case "JCBinary":
-			return new JCBinaryDotDrawer((JCBinary) node, newAstPath, output);
+			return new JCBinaryDotDrawer((JCBinary) node);
 		case "JCNewClass": // 10
-			return new JCNewClassDotDrawer((JCNewClass) node, newAstPath, output);
+			return new JCNewClassDotDrawer((JCNewClass) node);
 		case "JCLambda":
-			return new JCLambdaDotDrawer((JCLambda) node, newAstPath, output);
+			return new JCLambdaDotDrawer((JCLambda) node);
 		case "JCMemberReference":
-			return new JCMemberReferenceDotDrawer((JCMemberReference) node, newAstPath, output);
+			return new JCMemberReferenceDotDrawer((JCMemberReference) node);
 		case "JCAssignOp":
-			return new JCAssignOpDotDrawer((JCAssignOp) node, newAstPath, output);
+			return new JCAssignOpDotDrawer((JCAssignOp) node);
 		case "JCUnary":
-			return new JCUnaryDotDrawer((JCUnary) node, newAstPath, output);
+			return new JCUnaryDotDrawer((JCUnary) node);
 		case "JCWildcard": // 15
-			return new JCWildcardDotDrawer((JCWildcard) node, newAstPath, output);
+			return new JCWildcardDotDrawer((JCWildcard) node);
 		case "TypeBoundKind":
-			return new TypeBoundKindDotDrawer((TypeBoundKind) node, newAstPath, output);
+			return new TypeBoundKindDotDrawer((TypeBoundKind) node);
 		case "JCTry":
-			return new JCTryDotDrawer((JCTry) node, newAstPath, output);
+			return new JCTryDotDrawer((JCTry) node);
 		case "JCNewArray":
-			return new JCNewArrayDotDrawer((JCNewArray) node, newAstPath, output);
+			return new JCNewArrayDotDrawer((JCNewArray) node);
 		case "JCFieldAccess":
-			return new JCFieldAccessDotDrawer((JCFieldAccess) node, newAstPath, output);
+			return new JCFieldAccessDotDrawer((JCFieldAccess) node);
 		case "JCIdent": // 20
-			return new JCIdentDotDrawer((JCIdent) node, newAstPath, output);
+			return new JCIdentDotDrawer((JCIdent) node);
 		case "JCClassDecl":
-			return new JCClassDeclDotDrawer((JCClassDecl) node, newAstPath, output);
+			return new JCClassDeclDotDrawer((JCClassDecl) node);
 		case "JCMethodDecl":
-			return new JCMethodDeclDotDrawer((JCMethodDecl) node, newAstPath, output);
+			return new JCMethodDeclDotDrawer((JCMethodDecl) node);
 		case "JCVariableDecl":
-			return new JCVariableDeclDotDrawer((JCVariableDecl) node, newAstPath, output);
+			return new JCVariableDeclDotDrawer((JCVariableDecl) node);
 		case "JCTypeParameter":
-			return new JCTypeParameterDotDrawer((JCTypeParameter) node, newAstPath, output);
+			return new JCTypeParameterDotDrawer((JCTypeParameter) node);
 		case "JCLabeledStatement": // 25
-			return new JCLabeledStatementDotDrawer((JCLabeledStatement) node, newAstPath, output);
+			return new JCLabeledStatementDotDrawer((JCLabeledStatement) node);
 		case "JCBreak":
-			return new JCBreakDotDrawer((JCBreak) node, newAstPath, output);
+			return new JCBreakDotDrawer((JCBreak) node);
 		case "JCContinue": // 27
-			return new JCContinueDotDrawer((JCContinue) node, newAstPath, output);
+			return new JCContinueDotDrawer((JCContinue) node);
 		default:
-			return new JCDefaultDotDrawer(node, newAstPath, output);
+			return new JCDefaultDotDrawer(node);
 		}
 	}
 }

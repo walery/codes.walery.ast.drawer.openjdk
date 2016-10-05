@@ -1,24 +1,22 @@
 package codes.walery.ast.openjdk.drawer.custom;
 
-import java.io.OutputStream;
+import java.util.Map;
 
 import codes.walery.ast.openjdk.drawer.DotDrawer;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 public class JCVariableDeclDotDrawer extends DotDrawer<JCVariableDecl> {
 
-	public JCVariableDeclDotDrawer(final JCVariableDecl node, final String astPath, final OutputStream output) {
-		super(node, astPath, output);
+	public JCVariableDeclDotDrawer(final JCVariableDecl node) {
+		super(node);
 	}
 
 	@Override
-	protected String drawNodeProps(final EndPosTable ept) {
+	protected Map<String, ?> drawNodeProps() {
 		return props( //
 				prop("name", node.name), //
-				prop("sym", node.sym), //
-				super.drawNodeProps(ept) //
+				prop("sym", node.sym) //
 		);
 	}
 }

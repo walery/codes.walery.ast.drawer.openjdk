@@ -1,25 +1,23 @@
 package codes.walery.ast.openjdk.drawer.custom;
 
-import java.io.OutputStream;
+import java.util.Map;
 
 import codes.walery.ast.openjdk.drawer.DotDrawer;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 
 public class JCAssignOpDotDrawer extends DotDrawer<JCAssignOp> {
 
-	public JCAssignOpDotDrawer(final JCAssignOp node, final String astPath, final OutputStream output) {
-		super(node, astPath, output);
+	public JCAssignOpDotDrawer(final JCAssignOp node) {
+		super(node);
 	}
 
 	@Override
-	protected String drawNodeProps(final EndPosTable ept) {
+	protected Map<String, ?> drawNodeProps() {
 		return props( //
 				prop("getKind()", node.getKind()), //
 				prop("operator", node.operator), //
-				prop("getTag()", node.getTag()), //
-				super.drawNodeProps(ept) //
+				prop("getTag()", node.getTag()) //
 		);
 	}
 }

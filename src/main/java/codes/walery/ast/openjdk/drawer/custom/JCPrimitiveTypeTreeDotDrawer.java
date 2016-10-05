@@ -1,24 +1,22 @@
 package codes.walery.ast.openjdk.drawer.custom;
 
-import java.io.OutputStream;
+import java.util.Map;
 
 import codes.walery.ast.openjdk.drawer.DotDrawer;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
 
 public class JCPrimitiveTypeTreeDotDrawer extends DotDrawer<JCPrimitiveTypeTree> {
 
-	public JCPrimitiveTypeTreeDotDrawer(final JCPrimitiveTypeTree node, final String astPath, final OutputStream output) {
-		super(node, astPath, output);
+	public JCPrimitiveTypeTreeDotDrawer(final JCPrimitiveTypeTree node) {
+		super(node);
 	}
 
 	@Override
-	protected String drawNodeProps(final EndPosTable ept) {
+	protected Map<String, ?> drawNodeProps() {
 		return props( //
 				prop("typetag", node.typetag), //
-				prop("getPrimitiveTypeKind()", node.getPrimitiveTypeKind()), //
-				super.drawNodeProps(ept) //
+				prop("getPrimitiveTypeKind()", node.getPrimitiveTypeKind()) //
 		);
 	}
 }

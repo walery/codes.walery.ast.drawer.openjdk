@@ -1,23 +1,21 @@
 package codes.walery.ast.openjdk.drawer.custom;
 
-import java.io.OutputStream;
+import java.util.Map;
 
 import codes.walery.ast.openjdk.drawer.DotDrawer;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 
 public class JCTypeParameterDotDrawer extends DotDrawer<JCTypeParameter> {
 
-	public JCTypeParameterDotDrawer(final JCTypeParameter node, final String astPath, final OutputStream output) {
-		super(node, astPath, output);
+	public JCTypeParameterDotDrawer(final JCTypeParameter node) {
+		super(node);
 	}
 
 	@Override
-	protected String drawNodeProps(final EndPosTable ept) {
+	protected Map<String, ?> drawNodeProps() {
 		return props( //
-				prop("name", node.name), //
-				super.drawNodeProps(ept) //
+				prop("name", node.name) //
 		);
 	}
 }
