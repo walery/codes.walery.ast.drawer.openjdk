@@ -1,8 +1,7 @@
 package codes.walery.ast.openjdk.processor;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -15,7 +14,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 import codes.walery.ast.openjdk.drawer.DotCreater;
+import codes.walery.ast.openjdk.drawer.model.AbstractSourceTree;
+import codes.walery.ast.openjdk.drawer.visjs.VisjsConverter;
+import codes.walery.ast.openjdk.drawer.visjs.model.VisjsData;
 
+import com.google.gson.Gson;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -40,26 +43,23 @@ public class DotDrawerProcessor extends AbstractProcessor {
 		toDraw.stream().forEach(e -> {
 			CompilationUnitTree compilationUnit = trees.getPath(e).getCompilationUnit();
 
-			DotCreater.printAstAsDot((JCCompilationUnit) compilationUnit);
+			AbstractSourceTree ast = DotCreater.getAst((JCCompilationUnit) compilationUnit);
+			VisjsData<String> visjs = VisjsConverter.convert(ast, new VisjsData<String>());
+
+			getOutput(e, visjs);
 		});
 
 		return true;
 	}
 
-	private OutputStream getOutput(final Element e) {
+	private void getOutput(final Element e, final VisjsData<String> visjs) {
 		String fileToWrite = e.getAnnotation(DrawAst.class).value();
-		OutputStream output;
-		if (fileToWrite.isEmpty()) {
-			output = System.out;
-		} else {
-			// TODO error handling
-			try {
-				output = new FileOutputStream(new File(fileToWrite));
-			} catch (Exception exec) {
-				output = System.out;
-			}
+		try (Writer w = new FileWriter(fileToWrite)) {
+			Gson gson = new Gson();
+			gson.toJson(visjs, w);
+		} catch (Exception exec) {
+			// TODO handle correct
+			exec.printStackTrace();
 		}
-
-		return output;
 	}
 }

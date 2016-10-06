@@ -5,24 +5,22 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import codes.walery.ast.openjdk.drawer.custom.JCCompilationUnitDotDrawer;
-import codes.walery.ast.openjdk.drawer.model.Node;
-import codes.walery.ast.openjdk.drawer.visjs.VisjsConverter;
-import codes.walery.ast.openjdk.drawer.visjs.model.VisjsData;
+import codes.walery.ast.openjdk.drawer.model.AbstractSourceTree;
 
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 public class DotCreater {
-	public static void printAstAsDot(final JCCompilationUnit node) {
-		Node res = new JCCompilationUnitDotDrawer(node).draw(node.endPositions);
-		VisjsData<String> visjs = VisjsConverter.convert(res, new VisjsData<String>());
+	public static AbstractSourceTree getAst(final JCCompilationUnit node) {
+		AbstractSourceTree ast = new JCCompilationUnitDotDrawer(node).drawAsAst(node.endPositions);
 
 		try {
-			visjs.setSrc(getSrcCode(node));
+			ast.setSrc(getSrcCode(node));
 		} catch (IOException e) {
+			// TODO handle correct
 			e.printStackTrace();
 		}
 
-		System.out.println(visjs);
+		return ast;
 	}
 
 	private static String getSrcCode(final JCCompilationUnit node) throws IOException {

@@ -118,7 +118,11 @@ public abstract class DotDrawer<T extends JCTree> implements Drawer {
 	}
 
 	protected final Prop prop(final String name, final Object value) {
-		return new Prop(name, value);
+		if (value == null) {
+			return new Prop(name, null);
+		}
+
+		return new Prop(name, value.toString());
 	}
 
 	// TODO move somewhere

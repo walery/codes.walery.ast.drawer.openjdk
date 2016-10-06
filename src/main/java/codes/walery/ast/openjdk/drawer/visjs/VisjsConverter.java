@@ -1,5 +1,6 @@
 package codes.walery.ast.openjdk.drawer.visjs;
 
+import codes.walery.ast.openjdk.drawer.model.AbstractSourceTree;
 import codes.walery.ast.openjdk.drawer.model.Node;
 import codes.walery.ast.openjdk.drawer.visjs.model.NodeProps;
 import codes.walery.ast.openjdk.drawer.visjs.model.VisjsData;
@@ -7,6 +8,13 @@ import codes.walery.ast.openjdk.drawer.visjs.model.VisjsEdge;
 import codes.walery.ast.openjdk.drawer.visjs.model.VisjsNode;
 
 public class VisjsConverter {
+	public static VisjsData<String> convert(final AbstractSourceTree source, final VisjsData<String> target) {
+		VisjsData<String> res = convert((Node) source, target);
+		res.setSrc(source.getSrc());
+
+		return res;
+	}
+
 	public static VisjsData<String> convert(final Node source, final VisjsData<String> target) {
 		if (target == null) {
 			throw new NullPointerException("target must not be null.");
