@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Data;
 import codes.walery.ast.openjdk.drawer.custom.JCAnnotationDotDrawer;
 import codes.walery.ast.openjdk.drawer.custom.JCAssignOpDotDrawer;
 import codes.walery.ast.openjdk.drawer.custom.JCBinaryDotDrawer;
@@ -121,23 +122,10 @@ public abstract class DotDrawer<T extends JCTree> implements Drawer {
 	}
 
 	// TODO move somewhere
-	// TODO use lombok
+	@Data
 	public static class Prop {
 		private final String name;
 		private final Object value;
-
-		private Prop(final String name, final Object value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public Object getValue() {
-			return value;
-		}
 	}
 
 	protected String drawNodePropsFromFields() {
